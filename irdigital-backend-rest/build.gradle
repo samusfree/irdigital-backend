@@ -1,0 +1,7 @@
+dependencies {
+    implementation project(':irdigital-backend-common')
+    implementation project(':irdigital-backend-data')
+    implementation "org.springframework.boot:spring-boot-starter-web:${springboot}"
+    implementation "org.springdoc:springdoc-openapi-ui:${springdoc}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springboot}"
+}

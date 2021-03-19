@@ -1,0 +1,2 @@
+rootProject.name = 'irdigital-backend'
+include('irdigital-backend-common', 'irdigital-backend-data', 'irdigital-backend-rest', 'irdigital-backend-api')

@@ -1,0 +1,75 @@
+plugins {
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    implementation project(':irdigital-backend-common')
+    implementation project(':irdigital-backend-data')
+    implementation project(':irdigital-backend-rest')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation "org.springdoc:springdoc-openapi-ui:${springdoc}"
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation "org.hibernate.validator:hibernate-validator:${hibernateValidator}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+// ----
+// How to use Profiles with -P arguments
+// ----
+//
+// Run gradle bootRun tasks with the -P argument to utilize a profile.
+//
+// For example, within a subproject's directory:
+// gradle -Pdev bootRun
+//
+// Or, if in the parent project's directory,
+// individual projects can be targeted using their name:
+// gradle -Pdev Profiles-Blog-Sender:bootRun
+
+def prodProfiles = 'prod';
+def devProfiles = 'dev';
+def localProfiles = 'local';
+def propertyDrivenProfiles;
+
+if (project.hasProperty('prod')) {
+    // Used for production environment
+    // Remote PostgreSQL
+    // Uses embedded Tomcat
+    propertyDrivenProfiles = prodProfiles
+    dependencies {
+        implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: logbackLogStashEncoder
+        runtimeOnly 'org.postgresql:postgresql'
+    }
+
+} else if (project.hasProperty('dev')) {
+    // Used for dev enviroment
+    // Remote PostgreSQL
+    // Uses embedded Tomcat
+    propertyDrivenProfiles = devProfiles
+    dependencies {
+        implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: logbackLogStashEncoder
+        runtimeOnly 'org.postgresql:postgresql'
+    }
+} else {
+    // Default when no profile property is specified, used for testing
+    // Embedded H2 database
+    // Uses embedded Undertow instead of Tomcat for faster startup speeds
+    propertyDrivenProfiles = localProfiles
+    dependencies {
+        runtimeOnly 'org.springframework.boot:spring-boot-starter-undertow'
+        runtimeOnly 'com.h2database:h2'
+    }
+    configurations {
+        compile.exclude module: 'spring-boot-starter-tomcat'
+    }
+}
+println 'Using profile: "' + propertyDrivenProfiles + '" for ' + project.getName()
+
+processResources {
+    filesMatching("**/application.properties") {
+        filter {
+            it.replace("@spring.profiles.active@", propertyDrivenProfiles)
+        }
+    }
+}

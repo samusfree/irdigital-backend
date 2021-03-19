@@ -1,0 +1,33 @@
+plugins {
+    id "io.freefair.lombok" version "5.3.0" apply false
+    id 'io.spring.dependency-management' version "1.0.11.RELEASE" apply false
+    id 'org.springframework.boot' version "2.4.3" apply false
+}
+
+group = 'com.samus'
+version = '0.0.1-SNAPSHOT'
+
+ext.springdoc = "1.5.5"
+ext.springboot = "2.4.3"
+ext.logbackLogStashEncoder = "6.6"
+ext.jackson = "2.12.2"
+ext.hibernateValidator = "6.0.13.Final"
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "io.freefair.lombok"
+    apply plugin: 'io.spring.dependency-management'
+
+    group 'com.samus'
+    version '0.0.1-SNAPSHOT'
+
+    sourceCompatibility = '11'
+
+    repositories {
+        mavenCentral()
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
