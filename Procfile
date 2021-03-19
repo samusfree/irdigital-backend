@@ -1,0 +1,1 @@
+web: java -jar irdigital-backend-api/build/libs/irdigital-backend-api-0.0.1-SNAPSHOT.jar
