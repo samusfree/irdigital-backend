@@ -32,6 +32,25 @@ def devProfiles = 'dev';
 def localProfiles = 'local';
 def propertyDrivenProfiles;
 
+
+bootJar {
+    archiveFileName.set('irdigital-backend.api.jar')
+}
+
+task stage {
+    dependsOn 'clean'
+    dependsOn 'build'
+    tasks.findByName('build').mustRunAfter 'clean'
+    project.properties.put("prod", "prod");
+    println 'Using stage for Heroku in project ' + project.getName();
+    println 'Project Properties: ' + project.properties;
+}
+
+clean.doFirst {
+    project.file('irdigital-backend.api.jar').delete()
+}
+
+println 'Project Properties: ' + project.properties;
 if (project.hasProperty('prod')) {
     // Used for production environment
     // Remote PostgreSQL
